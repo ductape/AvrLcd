@@ -20,3 +20,5 @@
 # Compiler generated files
 *.lss
 *.mk
+*.d
+*.map
