@@ -22,3 +22,8 @@
 *.mk
 *.d
 *.map
+*.eep
+*.hex
+
+Eclipse generated makefiles
+makefile
