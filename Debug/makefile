@@ -37,6 +37,11 @@ FLASH_IMAGE += \
 
 EEPROM_IMAGE += \
 
+SIZEDUMMY += \
+sizedummy \
+
+AVRDUDEDUMMY += \
+
 
 # All Target
 all: AvrLcd.elf secondary-outputs
@@ -67,12 +72,24 @@ AvrLcd.eep: AvrLcd.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+sizedummy: AvrLcd.elf
+	@echo 'Invoking: Print Size'
+	-avr-size --format=avr --mcu=atmega16 AvrLcd.elf
+	@echo 'Finished building: $@'
+	@echo ' '
+
+avrdudedummy: AvrLcd.elf
+	@echo 'Invoking: AVRDude'
+	/usr/local/CrossPack-AVR-20121207/bin/avrdude -pm16 -cavrisp2 -b19200 -Uflash:w:AvrLcd.hex:a
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(ASM_DEPS)$(EEPROM_IMAGE)$(FLASH_IMAGE)$(ELFS)$(LSS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS) AvrLcd.elf
+	-$(RM) $(OBJS)$(C_DEPS)$(ASM_DEPS)$(EEPROM_IMAGE)$(FLASH_IMAGE)$(ELFS)$(LSS)$(AVRDUDEDUMMY)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS) AvrLcd.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY) $(AVRDUDEDUMMY)
 
 .PHONY: all clean dependents
 .SECONDARY:
